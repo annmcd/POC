@@ -1,19 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.aib.integration.lib</groupId>
-  <artifactId>POC</artifactId>
-  <packaging>jar</packaging>
-  <version>1.1.0-SNAPSHOT</version>
-  <name>POC</name>
- 	<description>AIB Awesome Microservice AMD</description>
+  <groupId>ie.aib.msf</groupId>
+	<artifactId>my-poc-ms</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-	<!--<parent>
-		<groupId>ie.aib.msf</groupId>
-		<artifactId>aib-msf-boot-parent</artifactId>
-		<version>1.0.5</version>
-		<relativePath/> 
-	</parent> -->
+	<name>demo-poc-ms</name>
+	<description>Demo Ms</description>
+
+
 
 	<properties>
 	
@@ -53,38 +49,112 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<!--<spring-boot.version>1.4.2.RELEASE</spring-boot.version>-->
+		<spring-boot.version>1.4.2.RELEASE</spring-boot.version>
         <maven.checkstyle.skip>true</maven.checkstyle.skip>
         <maven.findbugs.skip>true</maven.findbugs.skip>
         <maven.pmd.skip>true</maven.pmd.skip>
 	</properties>
 
+	
+	
+	
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-    </dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.8.2</version>
+    </dependency>
+   </dependencies>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring-boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<profiles>
 
+	
+	
+	<profile>
+	<id>generate-properties</id>
+	 <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>write-project-properties</goal>
+            </goals>
+            <configuration>
+              <outputFile>
+                ${project.build.Directory}/app.properties
+              </outputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</profile>
+	
+	
+	
+  <profile>
+   <id>read-properties</id>	
+	<build>
+  <plugins>
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>properties-maven-plugin</artifactId>
+      <version>1.0-alpha-2</version>
+      <executions>
+        <!-- Associate the read-project-properties goal with the initialize phase, to read the properties file. -->
+        <execution>
+          <!-- Apart from this test, the phase must be initialize -->
+        <!--  <phase>validate</phase> -->
+		   <phase>initialize</phase>
+          <goals>
+            <goal>read-project-properties</goal>
+          </goals>
+          <configuration>
+            <files>
+              <file>dev.properties</file>
+            </files>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-antrun-plugin</artifactId>
+      <version>1.6</version>
+      <executions>
+        <execution>
+          <phase>validate</phase>
+          <goals>
+            <goal>run</goal>
+          </goals>
+          <configuration>
+            <target>
+              <echo>Displaying value of properties</echo>
+              <echo>[foo] ${foo}</echo>
+            </target>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
+</profile>
+	
+	
+
+	
+	
+	
      <profile>
 		<id>unit-tests</id>
 		<build>
@@ -112,6 +182,7 @@
 					  <!--identify the unit tests -->
 		                <includes>
 		                    <include>**/*Test*.java</include>
+		                     <include>**/*Test.java</include>
 		                </includes>
 		                <excludes>
 		                <exclude>**/*IT.java</exclude>
@@ -279,28 +350,7 @@
     <id>find-bugs</id>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <failOnError>true</failOnError>
-                    <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                    <includeTests>true</includeTests>
-                </configuration>
-                <executions>
-                    <execution>
-                       <id>analyze-compile</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                            <goal>findbugs</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            
         </plugins>
     </build>
  </profile>
@@ -359,10 +409,7 @@
                     <linkXRef>false</linkXRef>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+			
 		</plugins>
 	</build>
 
