@@ -42,7 +42,7 @@
 		<sonar.login>admin</sonar.login>
 		<sonar.password>admin</sonar.password>
 		<sonar.host.url>admin</sonar.host.url>
-		<project.properties.file></project.properties.file>
+
 		<!--AMD end property additions-->
 	
 	
@@ -55,106 +55,22 @@
         <maven.pmd.skip>true</maven.pmd.skip>
 	</properties>
 
-	
-	
-	
 	<dependencies>
 	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>4.8.2</version>
-    </dependency>
-   </dependencies>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.8.2</version>
+</dependency>
+		
+    </dependencies>
 
 	<dependencyManagement>
 		<dependencies>
+			
 		</dependencies>
 	</dependencyManagement>
 	<profiles>
 
-	
-	<!-- ideal to do this at the start of the build we now have the maven property stack -->
-	<profile>
-	<id>generate-properties</id>
-	 <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0.0</version>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>write-project-properties</goal>
-            </goals>
-            <configuration>
-              <outputFile>
-                ${project.properties.file}
-              </outputFile>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-</profile>
-	
-	
-	
-  <profile>
-   <id>read-properties</id>	
-	<build>
-	<plugins>
-		<plugin>
-		  <groupId>org.codehaus.mojo</groupId>
-		  <artifactId>properties-maven-plugin</artifactId>
-		  <version>1.0.0</version>
-		  <executions>
-			<!-- Associate the read-project-properties goal with the initialize phase, to read the properties file. -->
-			<execution>
-			  <!-- Apart from this test, the phase must be initialize -->
-			<!--  <phase>validate</phase> -->
-			   <phase>initialize</phase>
-			  <goals>
-				<goal>read-project-properties</goal>
-			  </goals>
-			  <configuration>
-				<files>
-				  <file>${project.build.Directory}/project.properties</file>
-				</files>
-			  </configuration>
-			</execution>
-		  </executions>
-		</plugin>
-		<plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-antrun-plugin</artifactId>
-		  <version>1.6</version>
-		  <executions>
-			<execution>
-			  <phase>validate</phase>
-			  <goals>
-				<goal>run</goal>
-			  </goals>
-				  <configuration>
-					<target> <!--replace with a param -->
-					  <echo>Displaying value of properties</echo>
-					  <echo>[sonar.plugin.version] ${sonar.plugin.version}</echo>
-					</target>
-				  </configuration>
-			</execution>
-		  </executions>
-		</plugin>
-  </plugins>
-</build>
-</profile>
-	
-	
-
-	
-	
-	
      <profile>
 		<id>unit-tests</id>
 		<build>
